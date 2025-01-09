@@ -19,6 +19,16 @@
             </div>
         </div>
     </div>
+
+    <!-- Success Message -->
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert" id="success-alert">
+            {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
     
     <table class="table table-striped table-bordered">
         <thead class="thead-dark">
@@ -52,3 +62,16 @@
     </table>
 </div>
 @endsection
+
+@push('scripts')
+    <script>
+        // Auto-hide the success alert after 3 seconds
+        $(document).ready(function() {
+            setTimeout(function() {
+                $('#success-alert').fadeOut('slow', function() {
+                    $(this).remove(); // Remove the element from the DOM
+                });
+            }, 3000); // 3 seconds
+        });
+    </script>
+@endpush

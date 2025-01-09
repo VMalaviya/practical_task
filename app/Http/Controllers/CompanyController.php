@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Country;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -13,6 +14,7 @@ class CompanyController extends Controller
     public function index()
     {
         $companies = Company::all();
+        
         return view('companies.index', compact('companies'));
     }
 
@@ -21,7 +23,8 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        return view('companies.create');
+        $countries = Country::all();
+        return view('companies.create', compact('countries'));
     }
 
     /**
@@ -34,9 +37,14 @@ class CompanyController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:companies',
             'mobile' => 'required|string|max:15',
+            'country_id' => 'required|numeric',
+            'state_id' => 'required|numeric',
+            'city_id' => 'required|numeric',
             'services' => 'required|array',
             'branches' => 'required|array',
         ]);
+
+        // dd($request);
 
         $company = new Company($request->all());
 

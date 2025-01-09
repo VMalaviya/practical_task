@@ -19,6 +19,9 @@ class Company extends Model
         'name',
         'email',
         'mobile',
+        'country_id',
+        'state_id',
+        'city_id',
         'services',
         'branches',
     ];
