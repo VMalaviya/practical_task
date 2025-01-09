@@ -30,7 +30,7 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'logo' => 'image|nullable|max:1999',
+            'logo' => 'required|image|max:1999',
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:companies',
             'mobile' => 'required|string|max:15',
@@ -53,7 +53,7 @@ class CompanyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Company $company)
     {
         return view('companies.show', compact('company'));
     }
@@ -61,9 +61,9 @@ class CompanyController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Company $company)
     {
-        return view('companies.edit', compact('id'));
+        return view('companies.edit', compact('company'));
     }
 
     /**
@@ -80,12 +80,16 @@ class CompanyController extends Controller
             'branches' => 'required|array',
         ]);
 
+        // dd($request);
+
         $company->fill($request->all());
 
         if ($request->hasFile('logo')) {
             $filename = $request->file('logo')->store('logos', 'public');
             $company->logo = $filename;
         }
+
+        // dd($company);
 
         $company->save();
 

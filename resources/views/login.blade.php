@@ -52,7 +52,7 @@
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Submit</button>
+                <button type="submit" class="btn btn-primary w-100 rounded-0">Submit</button>
             </form>
             <div class="footer">
                 <p><a href="{{ route('register') }}">Register</a></p>
