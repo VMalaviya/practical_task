@@ -53,13 +53,12 @@ To run the application, use the following command:
 ```bash
 php artisan serve
 ```
-You can then access the application at `http://localhost:8000`.
+You can then access the application at `http://localhost:8000/login`.
 
 ## Features
 
 - User authentication [Login, Register]
 - Company management [CRUD operations]
-- [Add any other specific features of the project]
 
 ## Contributing
 
