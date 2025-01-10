@@ -42,6 +42,10 @@ To set up this project locally, follow these steps:
 
 ## Usage
 
+### Database Setup
+This project uses a MySQL database. You can configure the database settings in the `.env` file.
+
+
 ### Seeding the Database
 To seed the database with factory data, use the following command:
 ```bash
