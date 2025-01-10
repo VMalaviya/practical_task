@@ -29,6 +29,50 @@
                 @enderror
             </div>
         </div>
+        <div class="row mb-3">
+            <div class="form-group col-md-4">
+                <label for="country">Country:</label>
+                <select id="country" class="form-control" name="country_id">
+                    <option value="">Select Country</option>
+                    @foreach($countries as $country)
+                        <option value="{{ $country->id }}" {{ $company->country_id == $country->id ? 'selected' : '' }}>
+                            {{ $country->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('country_id')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="form-group col-md-4">
+                <label for="state">State:</label>
+                <select id="state" class="form-control" name="state_id">
+                    <option value="">Select State</option>
+                    @foreach($states as $state)
+                        <option value="{{ $state->id }}" {{ $company->state_id == $state->id ? 'selected' : '' }}>
+                            {{ $state->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('state_id')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="form-group col-md-4">
+                <label for="city">City:</label>
+                <select id="city" class="form-control" name="city_id">
+                    <option value="">Select City</option>
+                    @foreach($cities as $city)
+                        <option value="{{ $city->id }}" {{ $company->city_id == $city->id ? 'selected' : '' }}>
+                            {{ $city->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('city_id')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
         <div class="form-group mb-3">
             <label for="services">Services</label>
             <select name="services[]" class="form-control" id="services" multiple>
@@ -68,3 +112,52 @@
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        $('#country').change(function() {
+            var country_id = $(this).val();
+            $('#state').empty().append('<option value="">Select State</option>');
+            $('#city').empty().append('<option value="">Select City</option>');
+
+            if (country_id) {
+                $.ajax({
+                    url: '/get-states',
+                    type: 'POST',
+                    data: {
+                        country_id: country_id,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(data) {
+                        $.each(data, function(key, value) {
+                            $('#state').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            }
+        });
+
+        $('#state').change(function() {
+            var state_id = $(this).val();
+            $('#city').empty().append('<option value="">Select City</option>');
+
+            if (state_id) {
+                $.ajax({
+                    url: '/get-cities',
+                    type: 'POST',
+                    data: {
+                        state_id: state_id,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(data) {
+                        $.each(data, function(key, value) {
+                            $('#city').append('<option value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            }
+        });
+    });
+</script>
+@endpush

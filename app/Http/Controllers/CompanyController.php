@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
+use App\Models\State;
 use App\Models\Company;
 use App\Models\Country;
 use Illuminate\Http\Request;
@@ -10,6 +12,7 @@ class CompanyController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * Retrieves all companies and returns the index view.
      */
     public function index()
     {
@@ -20,6 +23,7 @@ class CompanyController extends Controller
 
     /**
      * Show the form for creating a new resource.
+     * Retrieves all countries and returns the create view.
      */
     public function create()
     {
@@ -29,6 +33,7 @@ class CompanyController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * Validates the request data and stores a new company in the database.
      */
     public function store(Request $request)
     {
@@ -44,10 +49,9 @@ class CompanyController extends Controller
             'branches' => 'required|array',
         ]);
 
-        // dd($request);
-
         $company = new Company($request->all());
 
+        // Handle logo upload
         if ($request->hasFile('logo')) {
             $filename = $request->file('logo')->store('logos', 'public');
             $company->logo = $filename;
@@ -60,6 +64,7 @@ class CompanyController extends Controller
 
     /**
      * Display the specified resource.
+     * Returns the show view for a specific company.
      */
     public function show(Company $company)
     {
@@ -68,14 +73,19 @@ class CompanyController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     * Retrieves the company and related data for editing.
      */
     public function edit(Company $company)
     {
-        return view('companies.edit', compact('company'));
+        $countries = Country::all();
+        $states = State::where('country_id', $company->country_id)->get();
+        $cities = City::where('state_id', $company->state_id)->get();
+        return view('companies.edit', compact('company', 'countries', 'states', 'cities'));
     }
 
     /**
      * Update the specified resource in storage.
+     * Validates the request data and updates the company in the database.
      */
     public function update(Request $request, Company $company)
     {
@@ -84,20 +94,20 @@ class CompanyController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:companies,email,' . $company->id,
             'mobile' => 'required|string|max:15',
+            'country_id' => 'required|numeric',
+            'state_id' => 'required|numeric',
+            'city_id' => 'required|numeric',
             'services' => 'required|array',
             'branches' => 'required|array',
         ]);
 
-        // dd($request);
-
         $company->fill($request->all());
 
+        // Handle logo upload
         if ($request->hasFile('logo')) {
             $filename = $request->file('logo')->store('logos', 'public');
             $company->logo = $filename;
         }
-
-        // dd($company);
 
         $company->save();
 
@@ -106,6 +116,7 @@ class CompanyController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * Deletes the specified company from the database.
      */
     public function destroy(Company $company)
     {

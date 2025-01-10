@@ -11,8 +11,8 @@ class Company extends Model
 
     /**
      * The attributes that are mass assignable.
-     *
-     * @var list<string>
+     * 
+     * @var array
      */
     protected $fillable = [
         'logo',
@@ -26,8 +26,37 @@ class Company extends Model
         'branches',
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     * 
+     * @var array
+     */
     protected $casts = [
         'services' => 'array',
         'branches' => 'array',
     ];
+    
+    /**
+     * Get the country associated with the company.
+     */
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    /**
+     * Get the state associated with the company.
+     */
+    public function state()
+    {
+        return $this->belongsTo(State::class);
+    }
+
+    /**
+     * Get the city associated with the company.
+     */
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
 }
